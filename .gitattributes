@@ -1,0 +1,5 @@
+# Les scripts Windows gardent leurs fins de ligne Windows, ceux du Mac les leurs.
+*.bat text eol=crlf
+demarrer text eol=lf
+*.zip binary
+*.jpg binary

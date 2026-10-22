@@ -1,0 +1,6 @@
+# Posé par « demarrer » depuis archives/ au premier lancement
+/pocketbase
+/pocketbase.exe
+# La base locale (données, fichiers envoyés, journaux) : propre à chaque machine
+/pb_data/
+.DS_Store

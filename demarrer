@@ -1,0 +1,43 @@
+#!/bin/bash
+# Lance les cartes d'équipe sur Mac : pose PocketBase, démarre le serveur,
+# ouvre le tableau dans le navigateur. Arrêter : Ctrl + C dans ce terminal.
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+VERSION="0.40.5"
+ADRESSE="127.0.0.1:${PORT:-8090}"
+
+# 1. Le bon PocketBase pour ce Mac (puce Apple ou Intel), sorti de son archive.
+if [ ! -x ./pocketbase ] || ! ./pocketbase --version 2>/dev/null | grep -q "$VERSION"; then
+  case "$(uname -m)" in
+    arm64) ARCHIVE="archives/pocketbase_${VERSION}_darwin_arm64.zip" ;;
+    *)     ARCHIVE="archives/pocketbase_${VERSION}_darwin_amd64.zip" ;;
+  esac
+  echo "Installation de PocketBase ${VERSION} ($(uname -m))..."
+  unzip -o -q "$ARCHIVE" pocketbase -d .
+  chmod +x ./pocketbase
+fi
+
+# 2. Un fichier téléchargé porte la marque « quarantaine » de macOS, qui
+#    bloque son lancement. Le kit vient de KreaCity : on la retire.
+xattr -dr com.apple.quarantine . 2>/dev/null || true
+
+# 3. Le navigateur s'ouvre dès que le serveur répond
+#    (sauf SANS_NAVIGATEUR=1, utilisé par verifier.sh).
+[ "${SANS_NAVIGATEUR:-}" = "1" ] || (
+  for _ in $(seq 1 40); do
+    if curl -sf "http://${ADRESSE}/api/health" >/dev/null 2>&1; then
+      open "http://${ADRESSE}"
+      exit 0
+    fi
+    sleep 0.25
+  done
+) &
+
+echo "Le tableau : http://${ADRESSE}"
+echo "L'administration : http://${ADRESSE}/_/"
+echo "Pour arrêter : Ctrl + C"
+echo
+exec ./pocketbase serve --http "$ADRESSE" \
+  --dir ./pb_data --migrationsDir ./pb_migrations --publicDir ./pb_public --hooksDir ./pb_hooks

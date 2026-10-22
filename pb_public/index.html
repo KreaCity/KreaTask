@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Les cartes d'équipe</title>
+  <style>
+    /* Tes couleurs : change ces valeurs pour mettre les tiennes. */
+    :root {
+      --bleu: #3486E7;
+      --rose: #F82094;
+      --navy: #00164A;
+      --fond: #F4F6FB;
+      --carte: #FFFFFF;
+      --colonne: #EEF2F9;
+      --texte: #00164A;
+      --texte-doux: #5B6785;
+      --bordure: #E3E8F2;
+      --rayon: 16px;
+      --a-faire: #3486E7;
+      --en-cours: #F82094;
+      --fait: #1F9D6B;
+    }
+
+    @font-face { font-family: "Inter"; font-weight: 400; src: url("polices/inter-400.woff") format("woff"); }
+    @font-face { font-family: "Inter"; font-weight: 600; src: url("polices/inter-600.woff") format("woff"); }
+    @font-face { font-family: "Inter"; font-weight: 800; src: url("polices/inter-800.woff") format("woff"); }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--fond);
+      color: var(--texte);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* En-tête : le visuel, le nom du projet, son équipe */
+    .entete {
+      position: relative;
+      background: var(--navy) url("images/entete.jpg") center / cover no-repeat;
+      color: #fff;
+      padding: 40px 24px 96px;
+    }
+    .entete-contenu {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .couverture {
+      width: 160px;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      flex-shrink: 0;
+    }
+    .surtitre {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .surtitre span { color: var(--rose); }
+    h1 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .equipe {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .equipe .avatar { border: 2px solid var(--navy); margin-right: -14px; }
+    .equipe .avatar:last-of-type { margin-right: 4px; }
+
+    /* Le tableau : trois colonnes, une par statut */
+    .tableau {
+      max-width: 1200px;
+      margin: -64px auto 48px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      position: relative;
+    }
+    .colonne {
+      background: var(--colonne);
+      border: 1px solid var(--bordure);
+      box-shadow: 0 12px 32px rgba(0, 22, 74, 0.10);
+      border-radius: calc(var(--rayon) + 4px);
+      padding: 16px;
+      min-height: 200px;
+    }
+    .colonne-titre {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 4px 16px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .pastille {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--couleur-colonne);
+    }
+    .compteur {
+      margin-left: auto;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--texte-doux);
+      background: var(--carte);
+      border-radius: 999px;
+      padding: 2px 10px;
+    }
+    .cartes { display: flex; flex-direction: column; gap: 12px; }
+
+    .carte {
+      background: var(--carte);
+      border-radius: var(--rayon);
+      border: 1px solid var(--bordure);
+      border-left: 4px solid var(--couleur-colonne);
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(0, 22, 74, 0.06);
+    }
+    .carte h3 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .carte-pied {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--texte-doux);
+    }
+    .responsable { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--texte); }
+    .echeance { white-space: nowrap; }
+    .echeance.depassee { color: var(--rose); font-weight: 600; }
+    .carte.fait h3 { color: var(--texte-doux); }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--fond);
+    }
+    /* Sans photo, une pastille à l'initiale du prénom. */
+    .avatar.initiale {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .vide, .erreur {
+      text-align: center;
+      color: var(--texte-doux);
+      font-size: 14px;
+      padding: 24px 8px;
+    }
+    .erreur { grid-column: 1 / -1; background: var(--carte); border-radius: var(--rayon); }
+
+    /* Sur téléphone : les colonnes s'empilent */
+    @media (max-width: 760px) {
+      .entete { padding: 28px 20px 84px; }
+      .entete-contenu { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .couverture { width: 120px; }
+      .tableau { grid-template-columns: 1fr; padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="entete">
+    <div class="entete-contenu">
+      <img class="couverture" id="couverture" alt="" hidden>
+      <div>
+        <p class="surtitre">Les cartes d'équipe</p>
+        <h1 id="nom-projet">Chargement…</h1>
+        <div class="equipe" id="equipe"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="tableau" id="tableau"></main>
+
+  <!-- Le SDK de PocketBase, copié dans le dossier : tout marche hors ligne. -->
+  <script src="pocketbase.umd.js"></script>
+  <script>
+    // Le serveur PocketBase qui sert cette page est aussi celui des données.
+    const pb = new PocketBase(window.location.origin);
+
+    // Les trois colonnes, dans l'ordre, avec leur couleur.
+    const COLONNES = [
+      { statut: "À faire", couleur: "var(--a-faire)" },
+      { statut: "En cours", couleur: "var(--en-cours)" },
+      { statut: "Fait", couleur: "var(--fait)" },
+    ];
+
+    const formatDate = new Intl.DateTimeFormat("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+
+    function urlImage(enregistrement, champ, taille) {
+      if (!enregistrement || !enregistrement[champ]) return "";
+      return pb.files.getURL(enregistrement, enregistrement[champ], taille ? { thumb: taille } : {});
+    }
+
+    function element(balise, classe, texte) {
+      const el = document.createElement(balise);
+      if (classe) el.className = classe;
+      if (texte !== undefined) el.textContent = texte;
+      return el;
+    }
+
+    // Les couleurs des pastilles, choisies par l'initiale : une même lettre a
+    // toujours la même couleur (L en bleu, K en rose). Ajoute des couleurs à
+    // la liste pour distinguer plus de monde.
+    const COULEURS_PASTILLE = ["var(--bleu)", "var(--rose)"];
+
+    function avatar(personne) {
+      if (personne && personne.avatar) {
+        const img = element("img", "avatar");
+        img.src = urlImage(personne, "avatar", "100x100");
+        img.alt = personne.name;
+        return img;
+      }
+      const nom = (personne && personne.name) || "?";
+      const initiale = nom.trim().charAt(0).toUpperCase() || "?";
+      const pastille = element("span", "avatar initiale", initiale);
+      pastille.style.background = COULEURS_PASTILLE[initiale.charCodeAt(0) % COULEURS_PASTILLE.length];
+      pastille.setAttribute("aria-hidden", "true");
+      return pastille;
+    }
+
+    function afficherCarte(carte, couleur) {
+      const el = element("article", "carte" + (carte.statut === "Fait" ? " fait" : ""));
+      el.style.setProperty("--couleur-colonne", couleur);
+      el.dataset.id = carte.id;
+
+      el.appendChild(element("h3", "", carte.titre));
+
+      const pied = element("div", "carte-pied");
+      const personne = carte.expand && carte.expand.responsable;
+      const responsable = element("span", "responsable");
+      if (personne) {
+        responsable.appendChild(avatar(personne));
+        responsable.appendChild(document.createTextNode(personne.name));
+      } else {
+        responsable.textContent = "Personne";
+      }
+      pied.appendChild(responsable);
+
+      if (carte.statut === "Fait" && carte.date_fin) {
+        pied.appendChild(element("span", "echeance", "Fait le " + formatDate.format(new Date(carte.date_fin))));
+      } else if (carte.echeance) {
+        const date = new Date(carte.echeance);
+        // En retard seulement le lendemain de l'échéance, pas dès l'heure passée.
+        const aujourdhui = new Date();
+        aujourdhui.setHours(0, 0, 0, 0);
+        const depassee = date < aujourdhui && date.toDateString() !== aujourdhui.toDateString();
+        pied.appendChild(element("span", "echeance" + (depassee ? " depassee" : ""), "Pour le " + formatDate.format(date)));
+      }
+      el.appendChild(pied);
+      return el;
+    }
+
+    function afficherTableau(cartes) {
+      const tableau = document.getElementById("tableau");
+      tableau.replaceChildren();
+      for (const { statut, couleur } of COLONNES) {
+        const dansColonne = cartes
+          .filter((c) => c.statut === statut)
+          .sort((a, b) => (a.position || 0) - (b.position || 0));
+
+        const colonne = element("section", "colonne");
+        colonne.style.setProperty("--couleur-colonne", couleur);
+        colonne.dataset.statut = statut;
+
+        const titre = element("h2", "colonne-titre");
+        titre.appendChild(element("span", "pastille"));
+        titre.appendChild(document.createTextNode(statut));
+        titre.appendChild(element("span", "compteur", String(dansColonne.length)));
+        colonne.appendChild(titre);
+
+        const liste = element("div", "cartes");
+        for (const carte of dansColonne) liste.appendChild(afficherCarte(carte, couleur));
+        if (dansColonne.length === 0) liste.appendChild(element("p", "vide", "Aucune carte"));
+        colonne.appendChild(liste);
+
+        tableau.appendChild(colonne);
+      }
+    }
+
+    function afficherProjet(projet) {
+      document.title = projet.nom + " · Les cartes d'équipe";
+      document.getElementById("nom-projet").textContent = projet.nom;
+
+      const couverture = document.getElementById("couverture");
+      if (projet.couverture) {
+        couverture.src = urlImage(projet, "couverture", "640x360");
+        couverture.hidden = false;
+      }
+
+      const equipe = document.getElementById("equipe");
+      const membres = (projet.expand && projet.expand.membres) || [];
+      for (const membre of membres) equipe.appendChild(avatar(membre));
+      equipe.appendChild(document.createTextNode(membres.map((m) => m.name).join(" et ")));
+    }
+
+    async function charger() {
+      try {
+        // Le premier projet (le projet de démonstration).
+        const projet = await pb.collection("projets").getFirstListItem("", { expand: "membres", sort: "created" });
+        afficherProjet(projet);
+
+        const cartes = await pb.collection("cartes").getFullList({
+          filter: pb.filter("projet = {:projet}", { projet: projet.id }),
+          expand: "responsable",
+          sort: "position",
+        });
+        afficherTableau(cartes);
+      } catch (erreur) {
+        console.error(erreur);
+        document.getElementById("nom-projet").textContent = "Les cartes d'équipe";
+        const tableau = document.getElementById("tableau");
+        tableau.replaceChildren(element("p", "erreur",
+          "Impossible de lire les cartes. PocketBase est-il bien lancé ? (voir le terminal)"));
+      }
+    }
+
+    charger();
+  </script>
+</body>
+</html>
