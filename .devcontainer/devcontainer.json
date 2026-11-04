@@ -4,8 +4,7 @@
   "name": "Atelier KreaTask",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
   "features": {
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
-    "ghcr.io/devcontainers/features/sshd:1": {}
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
   "hostRequirements": { "cpus": 2 },
   "postCreateCommand": "sudo ln -sf \"$PWD/.devcontainer/connexion.sh\" /usr/local/bin/connexion && sudo ln -sf \"$PWD/.devcontainer/administration.sh\" /usr/local/bin/administration && sudo ln -sf \"$PWD/.devcontainer/tableau.sh\" /usr/local/bin/tableau",

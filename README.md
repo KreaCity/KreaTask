@@ -10,7 +10,43 @@ s'affiche. La suite se construit avec Claude Code, partie par partie.
 
 ![Le tableau de démonstration](docs/apercu.png)
 
-## Ce qu'il te faut
+## Le plus simple : ton atelier, sans rien installer
+
+Tout se passe dans ton navigateur (Chrome ou Edge). Il te faut un compte GitHub
+gratuit et un abonnement Claude.
+
+1. **Copie le kit sur ton compte GitHub** :
+   [**Créer mon atelier**](https://github.com/new?template_name=KreaTask&template_owner=KreaCity).
+   Donne-lui un nom (par exemple `mon-tableau`), choisis **Private**, puis
+   **Create repository**.
+2. Sur la page de ton nouveau dépôt, clique sur le bouton vert **Code**, onglet
+   **Codespaces**, puis **Create codespace on main**.
+3. Patiente une à deux minutes : ton atelier se prépare et ton tableau démarre
+   tout seul.
+
+Dans le terminal, en bas :
+
+- `tableau` te donne le lien de ton tableau. Ouvre-le (Ctrl+clic, ou Cmd+clic
+  sur Mac), puis clique sur **Continue** si GitHub te le demande.
+- `administration` crée ton compte d'administration et te donne son lien.
+- `connexion` te connecte à Claude, la première fois. Ensuite, tape `claude`.
+
+### Les trois règles de l'atelier
+
+- **Demande à Claude de sauvegarder** après chaque étape qui marche
+  (« sauvegarde mon travail »).
+- **Ferme l'onglet quand tu as fini** : l'atelier se met en pause tout seul après
+  30 minutes, et ton quota gratuit est préservé.
+- **Ne clique jamais sur « Rebuild »** : ça te déconnecte de Claude.
+
+Ton tableau n'est visible que par toi, connecté à ton compte GitHub. Pour le test
+du temps réel, ouvre-le dans deux fenêtres côte à côte.
+
+La suite se passe comme ci-dessous, à partir de « La suite : construire avec
+Claude Code ». Les étapes 1 à 3 ne servent que si tu préfères tout installer sur
+ton ordinateur.
+
+## Sur ton ordinateur : ce qu'il te faut
 
 - Un abonnement Claude et **Claude Code** installé.
 - Un Mac (puce Apple ou Intel) ou un PC Windows.
@@ -115,6 +151,7 @@ complet est dans `PRD.md`.
 ## Ce qu'il y a dans le dossier
 
 - `demarrer`, `demarrer.bat` : le lancement, sur Mac et sur Windows.
+- `.devcontainer/` : ce qui prépare ton atelier.
 - `archives/` : PocketBase 0.40.5 tel que publié par ses auteurs.
 - `pb_migrations/` : la structure des données et le projet de démonstration.
 - `pb_public/` : l'écran, en HTML et JavaScript simples.

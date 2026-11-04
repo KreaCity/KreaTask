@@ -71,12 +71,30 @@ glissée dans l'une bouge dans l'autre, sans recharger la page.
   `pb_migrations/`, jamais en modifiant une migration déjà jouée.
 - **L'interface est en français**, avec les accents.
 - Pour lancer le tableau : `./demarrer` (Mac) ou `demarrer.bat` (Windows).
+  Dans l'atelier (voir plus bas) : `tableau`.
   Le serveur occupe le terminal tant qu'il tourne : si c'est toi qui le
   lances, fais-le en arrière-plan. Pour repartir de zéro : arrêter, supprimer
   `pb_data/`, relancer (le compte d'administration est à recréer).
 - Version de PocketBase : **0.40.5**. Vérifie son API dans le fichier
   `pb_data/types.d.ts` (créé au premier lancement), pas de mémoire : elle a
   beaucoup changé d'une version à l'autre.
+
+## Dans l'atelier
+
+Si la variable `CODESPACES` vaut `true`, la personne travaille dans son atelier,
+dans son navigateur, et n'a rien installé.
+
+- Le tableau démarre tout seul à l'ouverture. `tableau` donne son lien et le
+  relance s'il ne tourne plus. Ne donne jamais `127.0.0.1` : ce lien ne s'ouvre
+  pas de son côté. Après une nouvelle migration, arrête PocketBase et relance
+  `tableau`.
+- Son compte d'administration se crée avec `administration`.
+- **Tu sauvegardes le travail** : après chaque étape qui marche, un commit avec un
+  message en français, puis un push. Si elle dit « sauvegarde », tu le fais. Git
+  ne garde pas `pb_data/` : ses données de test restent dans l'atelier.
+- Ne propose jamais de « reconstruire le conteneur » (rebuild).
+- Ne passe jamais le port en public : l'écriture des cartes est ouverte à cette
+  étape, n'importe qui pourrait les modifier.
 
 ## Avant toute mise en ligne
 
