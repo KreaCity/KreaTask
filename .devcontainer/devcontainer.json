@@ -10,7 +10,7 @@
   "hostRequirements": { "cpus": 2 },
   "postCreateCommand": "sudo ln -sf \"$PWD/.devcontainer/connexion.sh\" /usr/local/bin/connexion && sudo ln -sf \"$PWD/.devcontainer/administration.sh\" /usr/local/bin/administration && sudo ln -sf \"$PWD/.devcontainer/tableau.sh\" /usr/local/bin/tableau",
   // Le tableau démarre tout seul à chaque ouverture de l'atelier.
-  "postStartCommand": "nohup bash -c 'SANS_NAVIGATEUR=1 ./demarrer' > /tmp/tableau.log 2>&1 &",
+  "postStartCommand": ".devcontainer/tableau.sh",
   "forwardPorts": [8090],
   "portsAttributes": {
     "8090": { "label": "Ton tableau", "onAutoForward": "notify" }
