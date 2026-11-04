@@ -1,0 +1,36 @@
+{
+  // L'atelier KreaTask de KreaCity : ton tableau et Claude, dans ton navigateur,
+  // sans rien installer sur ton ordinateur.
+  "name": "Atelier KreaTask",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  "hostRequirements": { "cpus": 2 },
+  "postCreateCommand": "sudo ln -sf \"$PWD/.devcontainer/connexion.sh\" /usr/local/bin/connexion && sudo ln -sf \"$PWD/.devcontainer/administration.sh\" /usr/local/bin/administration && sudo ln -sf \"$PWD/.devcontainer/tableau.sh\" /usr/local/bin/tableau",
+  // Le tableau démarre tout seul à chaque ouverture de l'atelier.
+  "postStartCommand": "nohup bash -c 'SANS_NAVIGATEUR=1 ./demarrer' > /tmp/tableau.log 2>&1 &",
+  "forwardPorts": [8090],
+  "portsAttributes": {
+    "8090": { "label": "Ton tableau", "onAutoForward": "notify" }
+  },
+  "secrets": {
+    "CLAUDE_CODE_OAUTH_TOKEN": {
+      "description": "Facultatif. Ton jeton Claude (commande `claude setup-token`) pour rester connecté.",
+      "documentationUrl": "https://code.claude.com/docs/fr/devcontainer"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["anthropic.claude-code", "MS-CEINTL.vscode-language-pack-fr"],
+      "settings": {
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+        "workbench.startupEditor": "readme",
+        "terminal.integrated.defaultLocation": "editor"
+      }
+    },
+    "codespaces": { "openFiles": ["README.md"] }
+  }
+}

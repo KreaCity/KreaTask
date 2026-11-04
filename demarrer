@@ -1,6 +1,7 @@
 #!/bin/bash
-# Lance les cartes d'équipe sur Mac : pose PocketBase, démarre le serveur,
-# ouvre le tableau dans le navigateur. Arrêter : Ctrl + C dans ce terminal.
+# Lance les cartes d'équipe sur Mac ou dans l'atelier (Linux) : pose PocketBase,
+# démarre le serveur, ouvre le tableau dans le navigateur.
+# Arrêter : Ctrl + C dans ce terminal.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -10,9 +11,10 @@ ADRESSE="127.0.0.1:${PORT:-8090}"
 
 # 1. Le bon PocketBase pour ce Mac (puce Apple ou Intel), sorti de son archive.
 if [ ! -x ./pocketbase ] || ! ./pocketbase --version 2>/dev/null | grep -q "$VERSION"; then
-  case "$(uname -m)" in
-    arm64) ARCHIVE="archives/pocketbase_${VERSION}_darwin_arm64.zip" ;;
-    *)     ARCHIVE="archives/pocketbase_${VERSION}_darwin_amd64.zip" ;;
+  case "$(uname -s)-$(uname -m)" in
+    Linux-*)      ARCHIVE="archives/pocketbase_${VERSION}_linux_amd64.zip" ;;
+    Darwin-arm64) ARCHIVE="archives/pocketbase_${VERSION}_darwin_arm64.zip" ;;
+    *)            ARCHIVE="archives/pocketbase_${VERSION}_darwin_amd64.zip" ;;
   esac
   echo "Installation de PocketBase ${VERSION} ($(uname -m))..."
   unzip -o -q "$ARCHIVE" pocketbase -d .
